@@ -2,10 +2,10 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { buildExpoGoogleFontsOptions } from "../withExpoGoogleFonts";
+import { buildExpoGoogleFontsOptions } from "..";
 
-// Build a throwaway project with a fake @expo-google-fonts/test package so the
-// plugin's require.resolve + file discovery runs against real files on disk.
+// Build a throwaway project with a fake @expo-google-fonts/test package so
+// discoverPackage's require.resolve runs against real files on disk.
 function makeFixture(): string {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "google-fonts-"));
   const pkgDir = path.join(root, "node_modules", "@expo-google-fonts", "test");
@@ -14,7 +14,7 @@ function makeFixture(): string {
     ["400Regular", "Test_400Regular.ttf"],
     ["700Bold", "Test_700Bold.ttf"],
     ["400Regular_Italic", "Test_400Regular_Italic.ttf"],
-  ];
+  ] as const;
 
   for (const [folder, file] of faces) {
     fs.mkdirSync(path.join(pkgDir, folder), { recursive: true });
@@ -85,5 +85,42 @@ describe("buildExpoGoogleFontsOptions", () => {
     });
     expect(options.android.fonts).toHaveLength(0);
     expect(options.ios.fonts).toHaveLength(0);
+  });
+});
+
+describe("withExpoGoogleFonts delegation", () => {
+  it("delegates to expo-font/app.plugin with the built options", () => {
+    const mockWithFonts = jest.fn((config: any) => ({
+      ...config,
+      _delegated: true,
+    }));
+
+    let withExpoGoogleFonts!: typeof import("..").default;
+    jest.isolateModules(() => {
+      jest.mock("expo-font/app.plugin", () => ({ default: mockWithFonts }), {
+        virtual: true,
+      });
+      withExpoGoogleFonts = require("..").default;
+    });
+
+    const projectRoot = makeFixture();
+    const result = withExpoGoogleFonts({ name: "App" } as any, {
+      fonts: [{ packageName: "test", weights: [400] }],
+      projectRoot,
+    });
+
+    expect(mockWithFonts).toHaveBeenCalledTimes(1);
+    const passedOptions = mockWithFonts.mock.calls[0]![1] as any;
+    expect(passedOptions.android.fonts).toHaveLength(1);
+    expect(passedOptions.android.fonts[0]!.fontFamily).toBe("Test");
+    expect((result as any)._delegated).toBe(true);
+  });
+
+  it("is a no-op when fonts array is empty", () => {
+    const config = { name: "App" } as any;
+    // Use the already-imported default export — expo-font is not called when fonts=[]
+    const { default: withExpoGoogleFonts } = require("..");
+    const result = withExpoGoogleFonts(config, { fonts: [] });
+    expect(result).toBe(config);
   });
 });

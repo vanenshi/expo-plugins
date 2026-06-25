@@ -1,0 +1,26 @@
+{
+  "name": "example-internal",
+  "slug": "example-app",
+  "version": "1.0.0",
+  "platforms": ["ios", "android"],
+  "plugins": [
+    [
+      "@vanenshi/expo-plugins/display-name",
+      {
+        "displayName": "Example (Beta)"
+      }
+    ],
+    [
+      "@vanenshi/expo-plugins/google-fonts",
+      {
+        "fonts": [{ "packageName": "inter", "weights": [400, 600] }]
+      }
+    ]
+  ],
+  "android": {
+    "package": "com.amirlealtech.exampleapp"
+  },
+  "ios": {
+    "bundleIdentifier": "com.amirlealtech.exampleapp"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "example-app",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "prebuild": "expo prebuild --clean"
+  },
+  "dependencies": {
+    "@vanenshi/expo-plugins": "file:..",
+    "expo": "~56",
+    "expo-font": "~56",
+    "react": "19.2.3",
+    "react-native": "0.85.3"
+  }
+}

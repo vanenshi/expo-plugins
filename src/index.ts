@@ -1,13 +1,12 @@
-import "./expo-config";
-
-export { default as withAndroidCustomAppName } from "./withAndroidCustomAppName";
-export type { AndroidCustomAppNameProps } from "./withAndroidCustomAppName";
+export { default as withDisplayName } from "./display-name";
+export type { DisplayNameProps } from "./display-name";
 
 export {
   default as withExpoGoogleFonts,
   buildExpoGoogleFontsOptions,
-} from "./withExpoGoogleFonts";
+} from "./google-fonts";
 export type {
   GoogleFontSpec,
   BuildExpoFontPluginOptionsInput,
-} from "./withExpoGoogleFonts";
+  ExpoGoogleFontsProps,
+} from "./google-fonts";
