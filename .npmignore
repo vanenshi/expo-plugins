@@ -1,0 +1,3 @@
+# Empty: the "files" allowlist in package.json controls what ships.
+# This file exists only to stop npm from falling back to .gitignore,
+# which would exclude the build/ output we need to publish.

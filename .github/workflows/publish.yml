@@ -1,0 +1,47 @@
+name: Publish
+
+# Publishes to npm when a GitHub Release is published.
+# Bump the version + tag with: pnpm version <patch|minor|major> && git push --follow-tags
+# then cut a Release from that tag. Requires an NPM_TOKEN secret (Automation token).
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm provenance
+    steps:
+      - name: 👀 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔨 Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: ⚙️ Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: 📦 Install
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗 Build
+        run: pnpm run build
+
+      - name: 🧪 Test
+        run: pnpm run test
+        env:
+          CI: true
+
+      - name: 🚀 Publish
+        run: pnpm publish --no-git-checks --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"

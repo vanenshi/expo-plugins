@@ -1,0 +1,51 @@
+{
+  "name": "@vanenshi/expo-plugins",
+  "version": "0.1.0",
+  "description": "A small collection of Expo config plugins.",
+  "license": "MIT",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "build",
+    "android-custom-app-name.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vanenshi/expo-plugins.git"
+  },
+  "scripts": {
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "lint": "expo-module lint",
+    "test": "expo-module test",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "expo",
+    "config-plugin",
+    "expo-plugins"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "expo-module-scripts": "^56.0.3",
+    "jest": "^29.7.0"
+  },
+  "peerDependencies": {
+    "expo": "*"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "expo-module-scripts": {
+        "dependencies": {
+          "babel-preset-expo": "*"
+        }
+      }
+    }
+  }
+}
