@@ -1,3 +1,4 @@
+import { ConfigPlugin } from "expo/config-plugins";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -113,20 +114,13 @@ function discoverPackage(
 }
 
 /**
- * Builds the `["expo-font", options]` plugin entry from installed
- * `@expo-google-fonts/*` packages — Android uses `fontFamily` + weight/style,
- * iOS embeds the resolved file paths.
- *
- * @example
- * // app.config.ts
- * import { withExpoGoogleFonts } from "@vanenshi/expo-plugins";
- * plugins: [
- *   ["expo-font", withExpoGoogleFonts({
- *     fonts: [{ packageName: "roboto", weights: [400, 700], importItalic: true }],
- *   })],
- * ]
+ * Builds the `expo-font` plugin options from installed `@expo-google-fonts/*`
+ * packages — Android uses `fontFamily` + weight/style, iOS embeds the resolved
+ * file paths. Use this directly only if you want to pass the options to
+ * `expo-font` yourself; most projects should use the {@link withExpoGoogleFonts}
+ * config plugin instead.
  */
-export function withExpoGoogleFonts({
+export function buildExpoGoogleFontsOptions({
   fonts,
   projectRoot = process.cwd(),
   warnOnMissing = true,
@@ -196,3 +190,33 @@ export function withExpoGoogleFonts({
 
   return { android: { fonts: androidFonts }, ios: { fonts: iosFonts } };
 }
+
+/**
+ * Config plugin that embeds `@expo-google-fonts/*` faces into the native
+ * projects. Resolves the requested weights/styles and delegates to `expo-font`,
+ * so you don't need a separate `["expo-font", ...]` entry.
+ *
+ * @example
+ * // app.config.ts
+ * plugins: [
+ *   [
+ *     "@vanenshi/expo-plugins/google-fonts",
+ *     { fonts: [{ packageName: "roboto", weights: [400, 700], importItalic: true }] },
+ *   ],
+ * ]
+ */
+const withExpoGoogleFonts: ConfigPlugin<BuildExpoFontPluginOptionsInput> = (
+  config,
+  props
+) => {
+  if (!props?.fonts?.length) return config;
+
+  const options = buildExpoGoogleFontsOptions(props);
+  // expo-font ships the real font-embedding plugin; we only resolve the paths.
+  const withFonts: ConfigPlugin<ExpoFontPluginOptions> =
+    require("expo-font/plugin/build/withFonts").default;
+
+  return withFonts(config, options);
+};
+
+export default withExpoGoogleFonts;

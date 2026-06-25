@@ -35,40 +35,48 @@ You can also pass the name explicitly instead of reading `android.appName`:
 plugins: [["@vanenshi/expo-plugins/android-custom-app-name", { appName: "MyApp (Beta)" }]];
 ```
 
+`android.appName` is a custom field. To type-check it in a TS app config, import
+the package once anywhere in your config (it augments `@expo/config-types`):
+
+```ts
+import "@vanenshi/expo-plugins"; // adds `android.appName` to the Expo config types
+```
+
 ---
 
 ## `withExpoGoogleFonts`
 
-Generates the `["expo-font", options]` plugin entry from installed
-[`@expo-google-fonts/*`](https://github.com/expo/google-fonts) packages. It
-discovers the `.ttf` files for the weights/styles you ask for and wires up both
-platforms — Android via `fontFamily` + weight/style, iOS via embedded paths.
+Embeds fonts from installed
+[`@expo-google-fonts/*`](https://github.com/expo/google-fonts) packages into the
+native projects. It discovers the `.ttf` files for the weights/styles you ask
+for and delegates to [`expo-font`](https://docs.expo.dev/versions/latest/sdk/font/),
+so you don't need a separate `["expo-font", ...]` entry.
 
-```ts
-// app.config.ts
-import { withExpoGoogleFonts } from "@vanenshi/expo-plugins";
-
-export default {
-  name: "MyApp",
-  plugins: [
+```json
+{
+  "plugins": [
     [
-      "expo-font",
-      withExpoGoogleFonts({
-        fonts: [
-          { packageName: "roboto", weights: [400, 500, 700], importItalic: true },
-          { packageName: "inter", weights: [400, 600] },
-        ],
-      }),
-    ],
-  ],
-};
+      "@vanenshi/expo-plugins/google-fonts",
+      {
+        "fonts": [
+          { "packageName": "roboto", "weights": [400, 500, 700], "importItalic": true },
+          { "packageName": "inter", "weights": [400, 600] }
+        ]
+      }
+    ]
+  ]
+}
 ```
 
-Install the font packages you reference:
+Install `expo-font` and the font packages you reference:
 
 ```sh
-npx expo install @expo-google-fonts/roboto @expo-google-fonts/inter
+npx expo install expo-font @expo-google-fonts/roboto @expo-google-fonts/inter
 ```
+
+> Need the raw `expo-font` options instead (e.g. to merge with local fonts)?
+> Import `buildExpoGoogleFontsOptions(input)` and pass the result to
+> `["expo-font", options]` yourself.
 
 ### Options
 

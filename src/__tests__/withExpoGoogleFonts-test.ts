@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { withExpoGoogleFonts } from "../withExpoGoogleFonts";
+import { buildExpoGoogleFontsOptions } from "../withExpoGoogleFonts";
 
 // Build a throwaway project with a fake @expo-google-fonts/test package so the
 // plugin's require.resolve + file discovery runs against real files on disk.
@@ -37,14 +37,14 @@ function makeFixture(): string {
   return root;
 }
 
-describe(withExpoGoogleFonts, () => {
+describe("buildExpoGoogleFontsOptions", () => {
   let projectRoot: string;
   beforeAll(() => {
     projectRoot = makeFixture();
   });
 
   it("resolves requested weights for android and ios", () => {
-    const options = withExpoGoogleFonts({
+    const options = buildExpoGoogleFontsOptions({
       projectRoot,
       fonts: [{ packageName: "test", weights: [400, 700] }],
     });
@@ -58,7 +58,7 @@ describe(withExpoGoogleFonts, () => {
   });
 
   it("includes italic faces when importItalic is set", () => {
-    const options = withExpoGoogleFonts({
+    const options = buildExpoGoogleFontsOptions({
       projectRoot,
       fonts: [{ packageName: "test", weights: [400], importItalic: true }],
     });
@@ -70,7 +70,7 @@ describe(withExpoGoogleFonts, () => {
   });
 
   it("honors a custom fontFamily override", () => {
-    const options = withExpoGoogleFonts({
+    const options = buildExpoGoogleFontsOptions({
       projectRoot,
       fonts: [{ packageName: "test", fontFamily: "Custom", weights: [400] }],
     });
@@ -78,7 +78,7 @@ describe(withExpoGoogleFonts, () => {
   });
 
   it("skips packages that are not installed", () => {
-    const options = withExpoGoogleFonts({
+    const options = buildExpoGoogleFontsOptions({
       projectRoot,
       warnOnMissing: false,
       fonts: [{ packageName: "does-not-exist", weights: [400] }],
