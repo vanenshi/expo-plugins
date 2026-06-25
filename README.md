@@ -17,6 +17,7 @@ display name on both iOS and Android — without touching the internal root `nam
 (which drives bundle structure and forces slow clean rebuilds when changed).
 
 **Underneath:**
+
 - **iOS** — sets `CFBundleDisplayName` in `Info.plist` via `withInfoPlist`.
 - **Android** — sets `app_name` in `strings.xml` via `withStringsXml`.
 
@@ -47,6 +48,7 @@ file paths, and delegates to `expo-font` — so you only declare _which_ font
 families and weights you want.
 
 **Underneath:**
+
 - **Discovery** — walks `@expo-google-fonts/<name>` package folders, parses
   folder names like `400Regular` / `700Bold_Italic`, and collects `.ttf` paths.
 - **Delegation** — passes the resolved font manifest to `expo-font/app.plugin`
@@ -64,7 +66,11 @@ npx expo install expo-font @expo-google-fonts/roboto @expo-google-fonts/inter
       "@vanenshi/expo-plugins/google-fonts",
       {
         "fonts": [
-          { "packageName": "roboto", "weights": [400, 500, 700], "importItalic": true },
+          {
+            "packageName": "roboto",
+            "weights": [400, 500, 700],
+            "importItalic": true
+          },
           { "packageName": "inter", "weights": [400, 600] }
         ]
       }
@@ -118,26 +124,3 @@ grep "CFBundleDisplayName" ios/*/Info.plist
 ```
 
 See [`apps/app/README.md`](apps/app/README.md) for details.
-
-### Publishing
-
-CI publishes to npm on every **GitHub Release** ([`.github/workflows/publish.yml`](.github/workflows/publish.yml)).
-Add an `NPM_TOKEN` repo secret (npm Automation token), then:
-
-```sh
-pnpm version <patch|minor|major>
-git push --follow-tags
-# create a GitHub Release from the new tag — CI builds, tests, and publishes
-```
-
----
-
-## Architecture decisions
-
-See [`docs/adr/`](docs/adr/) for the recorded decisions behind this package's design:
-package structure ([ADR-0001](docs/adr/0001-single-package.md)),
-toolchain ([ADR-0002](docs/adr/0002-expo-module-scripts.md)),
-logging ([ADR-0003](docs/adr/0003-warning-aggregator-logger.md)),
-font discovery ([ADR-0004](docs/adr/0004-google-fonts-auto-discovery.md)),
-folder-per-plugin layout ([ADR-0005](docs/adr/0005-folder-per-plugin-layout.md)),
-and cross-platform display name ([ADR-0006](docs/adr/0006-cross-platform-display-name.md)).
