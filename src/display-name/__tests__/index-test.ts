@@ -32,7 +32,7 @@ function emptyStrings(): AndroidConfig.Resources.ResourceXML {
   };
 }
 
-describe(withDisplayName, () => {
+describe("withDisplayName", () => {
   describe("Android (strings.xml)", () => {
     it("overwrites app_name with displayName", async () => {
       const result = await runStringsMod(

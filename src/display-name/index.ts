@@ -4,6 +4,7 @@ import {
   withInfoPlist,
   withStringsXml,
 } from "expo/config-plugins";
+
 import { createLogger } from "../utils/logger";
 
 const logger = createLogger("@vanenshi/expo-plugins/display-name");
@@ -35,7 +36,7 @@ export interface DisplayNameProps {
  */
 const withDisplayName: ConfigPlugin<DisplayNameProps | void> = (
   config,
-  props,
+  props
 ) => {
   const displayName = props?.displayName;
   if (!displayName) return config;
@@ -44,7 +45,7 @@ const withDisplayName: ConfigPlugin<DisplayNameProps | void> = (
   config = withStringsXml(config, (modConfig) => {
     if (modConfig.name) {
       logger.warnAndroid(
-        `displayName is set — ignoring abstract "name": ${modConfig.name}`,
+        `displayName is set — ignoring abstract "name": ${modConfig.name}`
       );
     }
 
@@ -65,7 +66,7 @@ const withDisplayName: ConfigPlugin<DisplayNameProps | void> = (
   config = withInfoPlist(config, (modConfig) => {
     if (modConfig.name) {
       logger.warnIOS(
-        `displayName is set — ignoring abstract "name": ${modConfig.name}`,
+        `displayName is set — ignoring abstract "name": ${modConfig.name}`
       );
     }
 
@@ -79,5 +80,5 @@ const withDisplayName: ConfigPlugin<DisplayNameProps | void> = (
 export default createRunOncePlugin(
   withDisplayName,
   "@vanenshi/expo-plugins/display-name",
-  pkg.version,
+  pkg.version
 );

@@ -6,7 +6,6 @@ import { createLogger } from "../utils/logger";
 
 const logger = createLogger("@vanenshi/expo-plugins/google-fonts");
 
-const withFonts = require("expo-font/app.plugin").default;
 const pkg = require("../../package.json");
 
 type FontStyle = "normal" | "italic";
@@ -59,11 +58,11 @@ export function buildExpoGoogleFontsOptions({
       (weight) => ({
         weight,
         style: "normal",
-      }),
+      })
     );
     if (spec.importItalic) {
       wanted.push(
-        ...weights.map((weight) => ({ weight, style: "italic" as const })),
+        ...weights.map((weight) => ({ weight, style: "italic" as const }))
       );
     }
 
@@ -77,7 +76,7 @@ export function buildExpoGoogleFontsOptions({
           logger.warn(
             `${fontFamily} weight ${weight}${
               style === "italic" ? " italic" : ""
-            } not found in @expo-google-fonts/${spec.packageName}.`,
+            } not found in @expo-google-fonts/${spec.packageName}.`
           );
         }
         continue;
@@ -99,7 +98,7 @@ export function buildExpoGoogleFontsOptions({
     if (fontDefinitions.length === 0) {
       if (warnOnMissing) {
         logger.warn(
-          `No faces embedded for ${fontFamily} (@expo-google-fonts/${spec.packageName}).`,
+          `No faces embedded for ${fontFamily} (@expo-google-fonts/${spec.packageName}).`
         );
       }
       continue;
@@ -134,19 +133,20 @@ export interface ExpoGoogleFontsProps {
  */
 const withExpoGoogleFonts: ConfigPlugin<ExpoGoogleFontsProps> = (
   config,
-  props,
+  props
 ) => {
   if (!props?.fonts?.length) return config;
 
   const options = buildExpoGoogleFontsOptions(
-    props as BuildExpoFontPluginOptionsInput,
+    props as BuildExpoFontPluginOptionsInput
   );
 
+  const withFonts = require("expo-font/app.plugin").default;
   return withFonts(config, options);
 };
 
 export default createRunOncePlugin(
   withExpoGoogleFonts,
   "@vanenshi/expo-plugins/google-fonts",
-  pkg.version,
+  pkg.version
 );

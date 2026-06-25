@@ -34,7 +34,7 @@ export const FOLDER_TO_WEIGHT: Record<string, number> = {
 };
 
 export function parseFolder(
-  folder: string,
+  folder: string
 ): { weight: number; style: FontStyle } | null {
   const italic = folder.endsWith("_Italic");
   const base = italic ? folder.slice(0, -"_Italic".length) : folder;
@@ -50,13 +50,13 @@ export function parseFolder(
  */
 export function parsePackage(
   pkgDir: string,
-  packageName: string,
+  packageName: string
 ): DiscoveredPackage | null {
   const metadataPath = path.join(pkgDir, "metadata.json");
   const indexPath = path.join(pkgDir, "index.js");
   if (!fs.existsSync(metadataPath) || !fs.existsSync(indexPath)) {
     logger.warn(
-      `@expo-google-fonts/${packageName} is missing metadata.json or index.js.`,
+      `@expo-google-fonts/${packageName} is missing metadata.json or index.js.`
     );
     return null;
   }
@@ -89,13 +89,13 @@ export function parsePackage(
  */
 export function resolvePackageDir(
   packageName: string,
-  projectRoot: string,
+  projectRoot: string
 ): string | null {
   try {
     return path.dirname(
       require.resolve(`@expo-google-fonts/${packageName}/package.json`, {
         paths: [projectRoot],
-      }),
+      })
     );
   } catch {
     return null;
@@ -109,14 +109,14 @@ export function resolvePackageDir(
 export function discoverPackage(
   packageName: string,
   projectRoot: string,
-  warnOnMissing: boolean,
+  warnOnMissing: boolean
 ): DiscoveredPackage | null {
   const pkgDir = resolvePackageDir(packageName, projectRoot);
 
   if (!pkgDir) {
     if (warnOnMissing) {
       logger.warn(
-        `@expo-google-fonts/${packageName} is not installed — run: npx expo install @expo-google-fonts/${packageName}`,
+        `@expo-google-fonts/${packageName} is not installed — run: npx expo install @expo-google-fonts/${packageName}`
       );
     }
     return null;

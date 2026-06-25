@@ -1,6 +1,7 @@
-import chalk from "chalk";
-
 const warned = new Set<string>();
+
+const bold = (text: string) => `\x1b[1m${text}\x1b[22m`;
+const yellow = (text: string) => `\x1b[33m${text}\x1b[39m`;
 
 /**
  * Scoped logger for Expo config plugins.
@@ -56,12 +57,12 @@ function formatWarning({
   let prefix = "» ";
 
   if (scope && platform) {
-    prefix += chalk.bold(`${scope}[${chalk.bold(platform)}]: `);
+    prefix += bold(`${scope}[${bold(platform)}]: `);
   } else if (scope) {
-    prefix += chalk.bold(`${scope}: `);
+    prefix += bold(`${scope}: `);
   } else if (platform) {
-    prefix += chalk.bold(`${platform}: `);
+    prefix += bold(`${platform}: `);
   }
 
-  return chalk.yellow(`${prefix}${warning}`);
+  return yellow(`${prefix}${warning}`);
 }
