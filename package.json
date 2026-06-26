@@ -1,6 +1,6 @@
 {
   "name": "@vanenshi/expo-plugins",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A small collection of Expo config plugins.",
   "license": "MIT",
   "main": "build/index.js",
