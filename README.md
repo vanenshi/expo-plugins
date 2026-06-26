@@ -112,15 +112,15 @@ pnpm test
 
 ### Example app
 
-`apps/app` is a minimal Expo app wiring both plugins, used to verify plugins
+`example` is a minimal Expo app wiring both plugins, used to verify plugins
 work end-to-end via `expo prebuild`:
 
 ```sh
-cd apps/app
-npm install
+cd example
+pnpm install
 npx expo prebuild --clean
 grep "Example (Beta)" android/app/src/main/res/values/strings.xml
 grep "CFBundleDisplayName" ios/*/Info.plist
 ```
 
-See [`apps/app/README.md`](apps/app/README.md) for details.
+See [`example/README.md`](example/README.md) for details.
